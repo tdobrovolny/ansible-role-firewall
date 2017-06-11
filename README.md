@@ -130,10 +130,9 @@ Including an example of how to use your role (for instance, with variables passe
 License
 -------
 
-BSD-3-Clause - see LICENSE.txt
+BSD-3-Clause - see [LICENSE](./LICENSE.txt)
 
-Author Information
-------------------
+Authors
+-------
 
-This role was authored by Tomas Dobrovolny <sdobrtomas@gmail.com>. Thank to
-all contributors for their work. List of contributors is in AUTHORS.txt
+View [AUTHORS](./AUTHORS.txt) for a list contributors to this role. Thanks everyone!
