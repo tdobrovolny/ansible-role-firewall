@@ -21,6 +21,7 @@ addons:
 install:
   # Install ansible
   - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; elif [ "$ANSIBLE_VERSION" = "git" ]; then pip install git+https://github.com/ansible/ansible.git ; else pip install ansible==$ANSIBLE_VERSION; fi
+  - pip install ansible-lint
 
   # Check ansible version
   - ansible --version
@@ -31,6 +32,7 @@ install:
 script:
   # Basic role syntax check
   - ansible-playbook tests/test_travis.yml -i tests/inventory --syntax-check
+  - ansible-lint tests/test_travis.yml
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
