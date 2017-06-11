@@ -5,6 +5,13 @@ python: "2.7"
 # Use the new container infrastructure
 sudo: false
 
+env:
+  - ANSIBLE_VERSION=git
+
+branches:
+  only:
+    - master
+
 # Install ansible
 addons:
   apt:
@@ -13,7 +20,7 @@ addons:
 
 install:
   # Install ansible
-  - pip install ansible
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; elif [ "$ANSIBLE_VERSION" = "git" ]; then pip install git+https://github.com/ansible/ansible.git ; else pip install ansible==$ANSIBLE_VERSION; fi
 
   # Check ansible version
   - ansible --version
