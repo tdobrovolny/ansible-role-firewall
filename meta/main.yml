@@ -43,9 +43,6 @@ galaxy_info:
      - 20
      - 19
      - 18
-   - name: CentOS
-     versions:
-     - 7
    - name: EL
      versions:
      - 7
