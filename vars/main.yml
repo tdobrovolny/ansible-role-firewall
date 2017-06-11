@@ -1,0 +1,22 @@
+---
+# vars file for firewall
+
+# Known types of firewall
+firewall_known_types:
+  - firewalld
+
+# OS and version mapping
+firewall_defaults:
+  Fedora_18: firewalld
+  Fedora_19: firewalld
+  Fedora_20: firewalld
+  Fedora_21: firewalld
+  Fedora_22: firewalld
+  Fedora_23: firewalld
+  Fedora_24: firewalld
+  Fedora_25: firewalld
+  Fedora_26: firewalld
+  CentOS_7: firewalld
+  RHEL_7: firewalld
+
+...

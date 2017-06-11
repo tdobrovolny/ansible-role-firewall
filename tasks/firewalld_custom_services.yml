@@ -1,0 +1,54 @@
+---
+
+- name: Check template/src colision
+  assert:
+    - (item.src is defined and item.template is not defined) or
+      (item.src is not defined and item.template is defined)
+  with_items: firewall_firewalld_services
+
+- name: Copy custom firewalld service definitions
+  tags:
+    - firewalld
+    - firewalld_custom_services
+  copy:
+    src: "{{ item.src }}"
+    dest: "/etc/firewalld/services/{{ item.service }}.xml"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    seuser: "{{ item.seuser }}"
+    serole: "{{ item.serole }}"
+    setype: "{{ item.setype }}"
+    selevel: "{{ item.selevel }}"
+  with_items: firewall_firewalld_services
+  when: itm.src is defined
+  loop_control:
+    label: "Install firewalld service {{item.name }} from {{ item.service }}.xml"
+  register: firewalld_custom_services_copy_result
+
+- name: Generate custom firewalld service definitions from templates
+  tags:
+    - firewalld
+    - firewalld_custom_services
+  template:
+    src: "{{ item.template }}"
+    dest: "/etc/firewalld/services/{{ item.service }}.xml"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    seuser: "{{ item.seuser }}"
+    serole: "{{ item.serole }}"
+    setype: "{{ item.setype }}"
+    selevel: "{{ item.selevel }}"
+  with_items: firewall_firewalld_services
+  when: itm.template is defined
+  loop_control:
+    label: "Generate firewalld service {{ item.name }} from {{ item.template }}"
+  register: firewalld_custom_services_generate_result
+
+- name: Wait for firewalld to detect new/changed servivces
+  pause:
+    seconds: 8
+  when: (firewalld_custom_services_generate_result is defined and firewalld_custom_services_generate_result.changed) or (firewalld_custom_services_copy_result is defined and firewalld_custom_services_copy_result.changed)
+
+...

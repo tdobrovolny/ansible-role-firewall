@@ -1,0 +1,9 @@
+---
+# handlers file for firewall
+
+- name: Firewalld permanent to current
+  command: firewall-cmd --reload
+  register: firewall_firewalld_reload
+  failed_when: "'success' not in firewall_firewalld_reload.stdout"
+
+...

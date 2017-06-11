@@ -1,0 +1,24 @@
+---
+# tasks file for firewall
+
+# Use user defined firewall
+- name: Check if firewall system is specified in variable
+  set_fact:
+    firewall_module: "{{ firewall_type }}"
+  when: firewall_type is defined and firewall_type in firewall_known_types
+
+# Autodect by OS and major version table
+- name: Autodect firewall by OS and version
+  set_fact:
+    firewall_module: "{{ firewall_defaults[ansible_distribution + '_' + ansible_distribution_major_version] }}"
+  when:
+    - firewall_module is not defined
+    - (ansible_distribution + '_' + ansible_distribution_major_version) in firewall_defaults
+
+- name: "Run tasks for '{{ firewall_module }}' firewall"
+  include_tasks: "{{ firewall_module }}.yml"
+  when:
+    - firewall_module is defined
+    - firewall_module == 'firewalld' and firewall_firewalld_zones is defined
+
+...

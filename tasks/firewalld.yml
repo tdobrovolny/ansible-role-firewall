@@ -1,0 +1,143 @@
+---
+# tasks file for firewall based on firewalld
+# http://www.firewalld.org/
+
+- name: Install custom firewalld services
+  tags:
+    - firewalld
+    - firewalld_custom_services
+  include_tasks: firewalld_custom_services.yml
+  when: firewall_firewalld_services is defined
+
+- name: Get defined firewalld zones
+  tags:
+    - firewalld
+  command: /usr/bin/firewall-cmd --permanent --get-zones
+  changed_when: False
+  register: firewall_firewalld_registered_zones
+  async: 10
+  poll: 1
+
+- name: Define new firewalld zones
+  tags:
+    - firewalld
+  command: "firewall-cmd --permanent --new-zone {{zone.name }}"
+  with_items:
+    - "{{ firewall_firewalld_zones }}"
+  loop_control:
+    label: "Create firewalld zone {{ zone.name }}"
+    loop_var: zone
+  when: 'zone["name"] not in firewall_firewalld_registered_zones.stdout'
+  async: 10
+  poll: 1
+
+- name: Enable services on firewalld zones
+  tags:
+    - firewalld
+    - firewalld_services
+  firewalld:
+    zone: "{{item.0.name}}"
+    service: "{{item.1}}"
+    permanent: true
+    state: enabled
+    immediate: false
+  with_subelements:
+    - "{{ firewall_firewalld_zones }}"
+    - services
+  loop_control:
+    label: "Enable permanent service {{ item.1 }} on firewalld zone {{item.0.name }}"
+  notify:
+    Firewalld permanent to current
+
+- name: Open ports on firewalld zones
+  tags:
+    - firewalld
+    - firewalld_ports
+  firewalld:
+    zone: "{{item.0.name}}"
+    port: "{{item.1}}"
+    permanent: true
+    state: enabled
+    immediate: false
+  with_subelements:
+    - "{{ firewall_firewalld_zones }}"
+    - ports
+  loop_control:
+    label: "Enable port {{ item.1 }} on firewalld zone {{item.0.name }}"
+  notify:
+    Firewalld permanent to current
+
+- name: Enable rich rules on firewalld zones
+  tags:
+    - firewalld
+    - firewalld_rich_rules
+  firewalld:
+    zone: "{{item.0.name}}"
+    rich_rule: "{{item.1}}"
+    immediate: false
+    permanent: true
+    state: enabled
+  with_subelements:
+    - "{{ firewall_firewalld_zones }}"
+    - rich_rules
+  loop_control:
+    label: "Enable rich rule {{ item.1 }} for firewalld zone {{item.0.name }} - "
+  notify:
+    Firewalld permanent to current
+
+- name: Assign sources to firewalld zones
+  tags:
+    - firewalld
+    - firewalld_sources
+  firewalld:
+    zone: "{{ item.0.name }}"
+    source: "{{ item.1|ipaddr }}"
+    immediate: false
+    permanent: true
+    state: enabled
+  with_subelements:
+    - "{{ firewall_firewalld_zones }}"
+    - sources
+  loop_control:
+    label: "Assign source {{ item.1|ipaddr }} to firewalld zone {{item.0.name }}"
+  notify:
+    Firewalld permanent to current
+
+- name: Assign interfaces to firewalld zones
+  tags:
+    - firewalld
+    - firewalld_interfaces
+  firewalld:
+    zone: "{{item.0.name}}"
+    interface: "{{item.1}}"
+    immediate: false
+    permanent: true
+    state: enabled
+  with_subelements:
+    - "{{ firewall_firewalld_zones }}"
+    - interfaces
+  loop_control:
+    label: "Assign interface {{ item.1 }} to firewalld zone {{item.0.name }}"
+  notify:
+    Firewalld permanent to current
+
+- name: Set masquarade for zones
+  tags:
+    - firewalld
+    - firewalld_masquerade
+  firewalld:
+    zone: "{{zone.name}}"
+    masquerade: "{{ zone.masquerade }}"
+    immediate: false
+    permanent: true
+    state: enabled
+  with_items:
+    - "{{ firewall_firewalld_zones }}"
+  loop_control:
+   label: "Set masquerade for zone {{zone.name }} to {{ zone.masquerade }}"
+   loop_var: zone
+  when: "zone.masquerade is defined"
+  notify:
+    Firewalld permanent to current
+
+...
