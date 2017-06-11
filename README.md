@@ -6,6 +6,7 @@ Manage all firewall systems. Implemented firewalld based systems.
 Requirements
 ------------
 
+- `ansible` >= 2.4.0
 - `firewalld` >= 0.2.11
 - `python-firewall`
 - `python3-firewall` (if used python version 3)
@@ -129,9 +130,10 @@ Including an example of how to use your role (for instance, with variables passe
 License
 -------
 
-BSD
+BSD-3-Clause - see LICENSE.txt
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role was authored by Tomas Dobrovolny <sdobrtomas@gmail.com>. Thank to
+all contributors for their work. List of contributors is in AUTHORS.txt
