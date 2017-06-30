@@ -79,4 +79,10 @@
     seconds: 8
   when: (firewalld_custom_services_generate_result is defined and firewalld_custom_services_generate_result.changed) or (firewalld_custom_services_copy_result is defined and firewalld_custom_services_copy_result.changed)
 
+- name: Firewalld reload for custom services
+  command: firewall-cmd --reload
+  register: firewall_firewalld_reload_custom
+  failed_when: "'success' not in firewall_firewalld_reload_custom.stdout"
+  when: (firewalld_custom_services_generate_result is defined and firewalld_custom_services_generate_result.changed) or (firewalld_custom_services_copy_result is defined and firewalld_custom_services_copy_result.changed)
+
 ...
