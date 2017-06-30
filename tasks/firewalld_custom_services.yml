@@ -48,7 +48,7 @@
     serole: "{{ item.serole }}"
     setype: "{{ item.setype }}"
     selevel: "{{ item.selevel }}"
-  with_items: firewall_firewalld_services
+  with_items: "{{ firewall_firewalld_services }}"
   when: itm.src is defined
   loop_control:
     label: "Install firewalld service {{item.name }} from {{ item.service }}.xml"
@@ -68,7 +68,7 @@
     serole: "{{ item.serole }}"
     setype: "{{ item.setype }}"
     selevel: "{{ item.selevel }}"
-  with_items: firewall_firewalld_services
+  with_items: "{{ firewall_firewalld_services }}"
   when: itm.template is defined
   loop_control:
     label: "Generate firewalld service {{ item.name }} from {{ item.template }}"
