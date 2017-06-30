@@ -51,7 +51,7 @@
   with_items: "{{ firewall_firewalld_services }}"
   when: item.src is defined
   loop_control:
-    label: "Install firewalld service {{item.name }} from {{ item.service }}.xml"
+    label: "Install firewalld service {{ item.service }}"
   register: firewalld_custom_services_copy_result
 
 - name: Generate custom firewalld service definitions from templates
@@ -71,7 +71,7 @@
   with_items: "{{ firewall_firewalld_services }}"
   when: item.template is defined
   loop_control:
-    label: "Generate firewalld service {{ item.name }} from {{ item.template }}"
+    label: "Generate firewalld service {{ item.service }}"
   register: firewalld_custom_services_generate_result
 
 - name: Wait for firewalld to detect new/changed servivces
