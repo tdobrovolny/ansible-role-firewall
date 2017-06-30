@@ -29,9 +29,10 @@
 
 - name: Check template/src colision
   assert:
-    - (item.src is defined and item.template is not defined) or
-      (item.src is not defined and item.template is defined)
-  with_items: firewall_firewalld_services
+    that:
+      - (item.src is defined and item.template is not defined) or
+        (item.src is not defined and item.template is defined)
+  with_items: "{{ firewall_firewalld_services }}"
 
 - name: Copy custom firewalld service definitions
   tags:
