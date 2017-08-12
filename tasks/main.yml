@@ -43,6 +43,12 @@
     - firewall_module is not defined
     - (ansible_distribution + '_' + ansible_distribution_major_version) in firewall_defaults
 
+- name: "Install custom firewalld services"
+  include_tasks: "firewalld_custom_services.yml"
+  when:
+    - firewall_module is defined
+    - firewall_module == 'firewalld' and firewall_firewalld_services is defined
+
 - name: "Run tasks for '{{ firewall_module }}' firewall"
   include_tasks: "{{ firewall_module }}.yml"
   when:
