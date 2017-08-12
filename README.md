@@ -23,6 +23,8 @@ variables themself.
    if not specified, default is detect by OS and its major version
 - `firewall_firewalld_zones` - `dictionary` - definition of firewall zones used by  
    `firewalld` system.
+- `firewall_firewalld_defaultzone` - `string` - name of default firewalld zone
+   if not defined use the first defined zone from `firewall_firewalld_zones`
 - `firewall_firewalld_services` - `array` - definition of custom services
 
 #### Structure of `firewall_zones` dictionary
