@@ -123,55 +123,55 @@ Example Playbook
 ----------------
 
 ```yaml
-    - hosts: servers
-      vars:
-		- firewall_firewalld_zones:
-		  - name: ZoneName
-		    ports:
-		      - 81/tcp
-		      - 54-55/tcp
-		      - 53/udp
-		    services: # Names of services as defined in firewalld
-		      - http
-		      - ssh
-		      - rsync
-		      - dns
-		      - ftp
-		    interfaces: # Names of interfaces belonging to this zone
-		      - eth0
-		      - br0
-		      - docker0
-		      - virbr0
-		      - enp0s25
-		    sources: # Sources IP addresses (both types IPv4 and IPv6)
-		      - 127.0.0.1/8
-		      - 10.88.32.0/24
-		      - 10.88.48.0/20
-		    rich_rules: # rich rules in grammer used by firewalld
-		      - 'rule service name="ftp" audit limit value="1/m" accept'
-		      - 'rule service name="http" audit limit value="1/m" accept'
-		    masquerade: false # true or false
-		- firewall_firewalld_services:
-		  - src: myservice.xml
-		    service: myservice
-		    owner: root
-		    group: root
-		    mode: u=rw,g=rw,o=r
-		    seuser: system_u
-		    serole: object_r
-		    setype: firewalld_etc_rw_t
-		    selevel: s0
-		  - template: hisservice.xml.j2
-		    service: hisservice
-		    owner: root
-		    group: root
-		    mode: u=rw,g=rw,o=r
-		    seuser: system_u
-		    serole: object_r
-		    setype: firewalld_etc_rw_t
-		    selevel: s0
-      roles:
-         - { role: tdobrovolny.firewall }
+- hosts: servers
+  vars:
+    - firewall_firewalld_zones:
+      - name: ZoneName
+        ports:
+          - 81/tcp
+          - 54-55/tcp
+          - 53/udp
+        services: # Names of services as defined in firewalld
+          - http
+          - ssh
+          - rsync
+          - dns
+          - ftp
+        interfaces: # Names of interfaces belonging to this zone
+          - eth0
+          - br0
+          - docker0
+          - virbr0
+          - enp0s25
+        sources: # Sources IP addresses (both types IPv4 and IPv6)
+          - 127.0.0.1/8
+          - 10.88.32.0/24
+          - 10.88.48.0/20
+        rich_rules: # rich rules in grammer used by firewalld
+          - 'rule service name="ftp" audit limit value="1/m" accept'
+          - 'rule service name="http" audit limit value="1/m" accept'
+        masquerade: false # true or false
+    - firewall_firewalld_services:
+      - src: myservice.xml
+        service: myservice
+        owner: root
+        group: root
+        mode: u=rw,g=rw,o=r
+        seuser: system_u
+        serole: object_r
+        setype: firewalld_etc_rw_t
+        selevel: s0
+      - template: hisservice.xml.j2
+        service: hisservice
+        owner: root
+        group: root
+        mode: u=rw,g=rw,o=r
+        seuser: system_u
+        serole: object_r
+        setype: firewalld_etc_rw_t
+        selevel: s0
+  roles:
+    - { role: tdobrovolny.firewall }
 ```
 
 License
