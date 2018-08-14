@@ -44,6 +44,8 @@ firewall_defaults:
   Fedora_24: firewalld
   Fedora_25: firewalld
   Fedora_26: firewalld
+  Fedora_27: firewalld
+  Fedora_28: firewalld
   CentOS_7: firewalld
   RHEL_7: firewalld
 
