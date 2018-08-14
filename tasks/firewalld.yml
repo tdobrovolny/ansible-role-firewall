@@ -30,27 +30,19 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-- name: Get defined firewalld zones
+- name: Define firewalld zones
   tags:
     - firewalld
-  command: /usr/bin/firewall-cmd --permanent --get-zones
-  changed_when: False
-  register: firewall_firewalld_registered_zones
-  async: 10
-  poll: 1
-
-- name: Define new firewalld zones
-  tags:
-    - firewalld
-  command: "firewall-cmd --permanent --new-zone {{zone.name }}"
-  with_items:
-    - "{{ firewall_firewalld_zones }}"
+  firewalld:
+    zone: "{{zone.name}}"
+    state: present
+    permanent: true
+  loop: "{{ firewall_firewalld_zones }}"
   loop_control:
-    label: "Create firewalld zone {{ zone.name }}"
+    label: "Firewalld zone {{ zone.name }}"
     loop_var: zone
-  when: 'zone["name"] not in firewall_firewalld_registered_zones.stdout'
-  async: 10
-  poll: 1
+  notify:
+    Firewalld permanent to current
 
 - name: Enable services on firewalld zones
   tags:
@@ -62,9 +54,7 @@
     permanent: true
     state: enabled
     immediate: false
-  with_subelements:
-    - "{{ firewall_firewalld_zones }}"
-    - services
+  loop: "{{ firewall_firewalld_zones|subelements('services') }}"
   loop_control:
     label: "Enable permanent service {{ item.1 }} on firewalld zone {{item.0.name }}"
   notify:
@@ -80,9 +70,7 @@
     permanent: true
     state: enabled
     immediate: false
-  with_subelements:
-    - "{{ firewall_firewalld_zones }}"
-    - ports
+  loop: "{{ firewall_firewalld_zones|subelements('ports') }}"
   loop_control:
     label: "Enable port {{ item.1 }} on firewalld zone {{item.0.name }}"
   notify:
@@ -98,9 +86,7 @@
     immediate: false
     permanent: true
     state: enabled
-  with_subelements:
-    - "{{ firewall_firewalld_zones }}"
-    - rich_rules
+  loop: "{{ firewall_firewalld_zones|subelements('rich_rules') }}"
   loop_control:
     label: "Enable rich rule {{ item.1 }} for firewalld zone {{item.0.name }} - "
   notify:
@@ -116,9 +102,7 @@
     immediate: false
     permanent: true
     state: enabled
-  with_subelements:
-    - "{{ firewall_firewalld_zones }}"
-    - sources
+  loop: "{{ firewall_firewalld_zones|subelements('sources') }}" 
   loop_control:
     label: "Assign source {{ item.1|ipaddr }} to firewalld zone {{item.0.name }}"
   notify:
@@ -134,9 +118,7 @@
     immediate: false
     permanent: true
     state: enabled
-  with_subelements:
-    - "{{ firewall_firewalld_zones }}"
-    - interfaces
+  loop: "{{ firewall_firewalld_zones|subelements('interfaces') }}"
   loop_control:
     label: "Assign interface {{ item.1 }} to firewalld zone {{item.0.name }}"
   notify:
@@ -152,8 +134,7 @@
     immediate: false
     permanent: true
     state: enabled
-  with_items:
-    - "{{ firewall_firewalld_zones }}"
+  loop: "{{ firewall_firewalld_zones }}"
   loop_control:
    label: "Set masquerade for zone {{zone.name }} to {{ zone.masquerade }}"
    loop_var: zone

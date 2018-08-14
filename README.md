@@ -6,7 +6,7 @@ Manage all firewall systems. Implemented firewalld based systems.
 Requirements
 ------------
 
-- `ansible` >= 2.4.0
+- `ansible` >= 2.6.0
 - `firewalld` >= 0.2.11
 - `python-firewall`
 - `python3-firewall` (if used python version 3)

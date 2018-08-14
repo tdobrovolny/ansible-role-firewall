@@ -32,7 +32,7 @@
     that:
       - (item.src is defined and item.template is not defined) or
         (item.src is not defined and item.template is defined)
-  with_items: "{{ firewall_firewalld_services }}"
+  loop: "{{ firewall_firewalld_services }}"
 
 - name: Copy custom firewalld service definitions
   tags:
@@ -48,7 +48,7 @@
     serole: "{{ item.serole }}"
     setype: "{{ item.setype }}"
     selevel: "{{ item.selevel }}"
-  with_items: "{{ firewall_firewalld_services }}"
+  loop: "{{ firewall_firewalld_services }}"
   when: item.src is defined
   loop_control:
     label: "Install firewalld service {{ item.service }}"
@@ -68,7 +68,7 @@
     serole: "{{ item.serole }}"
     setype: "{{ item.setype }}"
     selevel: "{{ item.selevel }}"
-  with_items: "{{ firewall_firewalld_services }}"
+  loop: "{{ firewall_firewalld_services }}"
   when: item.template is defined
   loop_control:
     label: "Generate firewalld service {{ item.service }}"
